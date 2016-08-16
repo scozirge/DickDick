@@ -28,7 +28,14 @@ public partial class BattleManager : MonoBehaviour
     }
     public static void BattleStart()
     {
+        BattleUI.UpdateAccurateUI(CurSelectRole.Accurate);
+    }
+    public static void NextTrun()
+    {
 
+    }
+    public static void NewRound()
+    {
 
     }
 
@@ -59,9 +66,11 @@ public partial class BattleManager : MonoBehaviour
     }
     public static void SetTargetRole(RoleCom _targetRole)
     {
+        if (_targetRole.MyCondition == BattleRoleCondition.Death)
+            return;
         TargetRole = _targetRole;
         CurSelectRole.SetTarget(TargetRole);
-        for (int i = 0; i < EnemyRoleList.Count;i++ )
+        for (int i = 0; i < EnemyRoleList.Count; i++)
         {
             if (EnemyRoleList[i].Index != _targetRole.Index)
                 EnemyRoleList[i].SetUnAim();
@@ -69,6 +78,14 @@ public partial class BattleManager : MonoBehaviour
             {
                 EnemyRoleList[i].SetBeAim();
             }
+        }
+    }
+    public static void FindNewTarget()
+    {
+        for (int i = 0; i < EnemyRoleList.Count; i++)
+        {
+            if (EnemyRoleList[i].MyCondition == BattleRoleCondition.Alive)
+                SetTargetRole(EnemyRoleList[i]);
         }
     }
     public static void Attack()

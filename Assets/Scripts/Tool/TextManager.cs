@@ -58,6 +58,6 @@ public class TextManager
     /// </summary>
     public static int ToPercent(float _value)
     {
-        return (int)(_value * 100);
+        return Mathf.RoundToInt(_value * 100);
     }
 }

@@ -14,16 +14,16 @@ public partial class BattleManager : MonoBehaviour
 
     public static void InitSpawner()
     {
-        Prefab_PlayerRoleCom = Resources.Load<GameObject>("Object/PlayerRole");
+        Prefab_PlayerRoleCom = Resources.Load<GameObject>("Object/Role/PlayerRole");
         if (Prefab_PlayerRoleCom == null)
         {
-            Debug.LogWarning("找不到Object/PlayerRole");
+            Debug.LogWarning("找不到Object/Role/PlayerRole");
             return;
         }
-        Prefab_EnemyRoleCom = Resources.Load<GameObject>("Object/EnemyRole");
+        Prefab_EnemyRoleCom = Resources.Load<GameObject>("Object/Role/EnemyRole");
         if (Prefab_EnemyRoleCom == null)
         {
-            Debug.LogWarning("找不到Object/EnemyRole");
+            Debug.LogWarning("找不到Object/Role/EnemyRole");
             return;
         }
         Trans_PlayerRoleComParent = MyTransform.FindChild("Player");

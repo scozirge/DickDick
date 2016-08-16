@@ -9,18 +9,16 @@ public class RolePanel : MonoBehaviour
     [SerializeField]
     Camera MyCamera;
     [SerializeField]
-    static Slider[] PlayerHealthSliders;
+    Slider[] PlayerHealthSliders;
     [SerializeField]
-    static Slider[] EnemyHealthSliders;
+    Slider[] EnemyHealthSliders;
+    [SerializeField]
+    Transform Trans_HitTextList;
+    [SerializeField]
+    GameObject Prefab_HitText;
+    List<HitText> HitTextList = new List<HitText>();
     public void Init()
     {
-        PlayerHealthSliders = new Slider[3];
-        EnemyHealthSliders = new Slider[3];
-        for (int i = 0; i < 3; i++)
-        {
-            PlayerHealthSliders[i] = transform.FindChild(string.Format("PHealthBar{0}", i)).GetComponent<Slider>();
-            EnemyHealthSliders[i] = transform.FindChild(string.Format("EHealthBar{0}", i)).GetComponent<Slider>();
-        }
         for (int i = 0; i < PlayerHealthSliders.Length; i++)
         {
             if (i > BattleManager.PlayerRoleList.Count)
@@ -44,7 +42,7 @@ public class RolePanel : MonoBehaviour
             EnemyHealthSliders[i].value = 1;
         }
     }
-    public static void UpdateHealthUI()
+    public void UpdateHealthUI()
     {
         for (int i = 0; i < BattleManager.PlayerRoleList.Count; i++)
         {
@@ -53,6 +51,44 @@ public class RolePanel : MonoBehaviour
         for (int i = 0; i < BattleManager.EnemyRoleList.Count; i++)
         {
             EnemyHealthSliders[i].value = BattleManager.EnemyRoleList[i].HealthRatio;
+        }
+    }
+    /// <summary>
+    /// 創造擊中文字物件
+    /// </summary>
+    HitText SpawnHitText()
+    {
+        //創造物件並初始化
+        GameObject go_hitText = GameObject.Instantiate(Prefab_HitText, Vector2.zero, Quaternion.identity) as GameObject;
+        go_hitText.transform.SetParent(Trans_HitTextList);
+        HitText hitText = go_hitText.GetComponent<HitText>();
+        hitText.Init(MyCanvasRect, MyCamera);
+        //加入清單
+        HitTextList.Add(hitText);
+        return hitText;
+    }
+    public void ShowHitText(string _label, int _value, RoleCom _roleCom)
+    {
+        if (HitTextList.Count == 0)
+        {
+            SpawnHitText().Show(_label, _value, _roleCom);
+        }
+        else
+        {
+            bool isShowed = false;
+            for (int i = 0; i < HitTextList.Count; i++)//用迴圈找可以播放的文字物件
+            {
+                if (!HitTextList[i].IsWork)
+                {
+                    HitTextList[i].Show(_label, _value, _roleCom);
+                    isShowed = true;
+                    break;
+                }
+            }
+            if (!isShowed)//isShowed為false代表目前的文字物件都在播放，創造新的文字物件並播放
+            {
+                SpawnHitText().Show(_label, _value, _roleCom);
+            }
         }
     }
 }
