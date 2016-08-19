@@ -11,6 +11,7 @@ public partial class BattleManager : MonoBehaviour
     public static List<PlayerRoleCom> PlayerRoleList = new List<PlayerRoleCom>();
     public static List<EnemyRoleCom> EnemyRoleList = new List<EnemyRoleCom>();
     public static PlayerRoleCom CurSelectRole;
+    public static int CurRoleIndex { get; private set; }
     public static RoleCom TargetRole;
 
     void Update()
@@ -22,7 +23,8 @@ public partial class BattleManager : MonoBehaviour
         MyTransform = transform;
         InitBattleCtrl();
         InitRoleCom(_playerRoleList);
-        SetCurRole(0);
+        CurRoleIndex = 0;
+        SetCurRole(CurRoleIndex);
         SetTargetRole(EnemyRoleList[0]);
         MyBattleUI.Init();
     }
@@ -32,7 +34,14 @@ public partial class BattleManager : MonoBehaviour
     }
     public static void NextTrun()
     {
-
+        CurRoleIndex++;
+        if (CurRoleIndex > 2)
+            return;
+        SetCurRole(CurRoleIndex);
+        if (!TargetRole.IsAlive)
+            SetTargetRole(TargetRole);
+        else
+            FindNewTarget();
     }
     public static void NewRound()
     {
@@ -66,7 +75,7 @@ public partial class BattleManager : MonoBehaviour
     }
     public static void SetTargetRole(RoleCom _targetRole)
     {
-        if (_targetRole.MyCondition == BattleRoleCondition.Death)
+        if (!_targetRole.IsAlive)
             return;
         TargetRole = _targetRole;
         CurSelectRole.SetTarget(TargetRole);
@@ -84,7 +93,7 @@ public partial class BattleManager : MonoBehaviour
     {
         for (int i = 0; i < EnemyRoleList.Count; i++)
         {
-            if (EnemyRoleList[i].MyCondition == BattleRoleCondition.Alive)
+            if (EnemyRoleList[i].IsAlive)
                 SetTargetRole(EnemyRoleList[i]);
         }
     }

@@ -17,6 +17,8 @@ public class RolePanel : MonoBehaviour
     [SerializeField]
     GameObject Prefab_HitText;
     List<HitText> HitTextList = new List<HitText>();
+    [SerializeField]
+    Combo MyCombo;
     public void Init()
     {
         for (int i = 0; i < PlayerHealthSliders.Length; i++)
@@ -67,11 +69,11 @@ public class RolePanel : MonoBehaviour
         HitTextList.Add(hitText);
         return hitText;
     }
-    public void ShowHitText(string _label, int _value, RoleCom _roleCom)
+    public void ShowHitText(params object[] _params)
     {
         if (HitTextList.Count == 0)
         {
-            SpawnHitText().Show(_label, _value, _roleCom);
+            SpawnHitText().Show(_params);
         }
         else
         {
@@ -80,15 +82,23 @@ public class RolePanel : MonoBehaviour
             {
                 if (!HitTextList[i].IsWork)
                 {
-                    HitTextList[i].Show(_label, _value, _roleCom);
+                    HitTextList[i].Show(_params);
                     isShowed = true;
                     break;
                 }
             }
             if (!isShowed)//isShowed為false代表目前的文字物件都在播放，創造新的文字物件並播放
             {
-                SpawnHitText().Show(_label, _value, _roleCom);
+                SpawnHitText().Show(_params);
             }
         }
+    }
+    public void ShowCombo(int _combo)
+    {
+        MyCombo.ShowCombo(_combo);
+    }
+    public void HideCombo()
+    {
+        MyCombo.HideCombo();
     }
 }
