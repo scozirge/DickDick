@@ -24,6 +24,10 @@ public class PlayerRoleCom : RoleCom
         Combo = 0;
         IsEndTurn = false;
     }
+    public void Defend()
+    {
+        ResetCombo();
+    }
     public override AttackCondition Attack()
     {
         if (IsEndTurn)
@@ -39,7 +43,6 @@ public class PlayerRoleCom : RoleCom
                 return AttackCondition.WrongTarget;
             case AttackCondition.Miss:
                 ResetCombo();
-                BattleUI.HideCombo();
                 BattleManager.NextTrun();
                 IsEndTurn = true;
                 return AttackCondition.Miss;
@@ -56,5 +59,6 @@ public class PlayerRoleCom : RoleCom
     protected void ResetCombo()
     {
         Combo = 0;
+        BattleUI.HideCombo();
     }
 }

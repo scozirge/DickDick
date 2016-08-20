@@ -13,6 +13,7 @@ public partial class BattleManager : MonoBehaviour
     public static PlayerRoleCom CurSelectRole;
     public static int CurRoleIndex { get; private set; }
     public static RoleCom TargetRole;
+    public static int Round { get; private set; }
 
     void Update()
     {
@@ -24,6 +25,7 @@ public partial class BattleManager : MonoBehaviour
         InitBattleCtrl();
         InitRoleCom(_playerRoleList);
         CurRoleIndex = 0;
+        Round = 0;
         SetCurRole(CurRoleIndex);
         SetTargetRole(EnemyRoleList[0]);
         MyBattleUI.Init();
@@ -35,17 +37,29 @@ public partial class BattleManager : MonoBehaviour
     public static void NextTrun()
     {
         CurRoleIndex++;
-        if (CurRoleIndex > 2)
+        if (CurRoleIndex == PlayerRoleList.Count)
+        {
+            NextRound();
             return;
+        }
+        else if (CurRoleIndex > 2)
+        {
+            CurRoleIndex = 0;
+            Debug.LogWarning(string.Format("CurRoleIndex超出範圍{0}", CurRoleIndex));
+            return;
+        }
         SetCurRole(CurRoleIndex);
-        if (!TargetRole.IsAlive)
+        if (TargetRole.IsAlive)
             SetTargetRole(TargetRole);
         else
             FindNewTarget();
     }
-    public static void NewRound()
+    public static void NextRound()
     {
-
+        Round++;
+        CurRoleIndex = 0;
+        SetCurRole(CurRoleIndex);
+        SetTargetRole(EnemyRoleList[0]);
     }
 
     public static void InitRoleCom(List<PlayerRole> _playerRoleList)
@@ -100,6 +114,11 @@ public partial class BattleManager : MonoBehaviour
     public static void Attack()
     {
         CurSelectRole.Attack();
+    }
+    public static void Defend()
+    {
+        CurSelectRole.Defend();
+        NextTrun();
     }
     public static void InitEnemyRole()
     {

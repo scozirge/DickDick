@@ -16,6 +16,10 @@ public class CtrlPanel : MonoBehaviour
     {
         BattleManager.Attack();
     }
+    public void OnDefendClick()
+    {
+        BattleManager.Defend();
+    }
 
     public void UpdateAccurateUI(float _acculate)
     {
