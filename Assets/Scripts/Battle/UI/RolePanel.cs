@@ -23,36 +23,36 @@ public class RolePanel : MonoBehaviour
     {
         for (int i = 0; i < PlayerHealthSliders.Length; i++)
         {
-            if (i > BattleManager.PlayerRoleList.Count)
+            if (i > BattleManager.PRoleList.Count)
                 PlayerHealthSliders[i].gameObject.SetActive(false);
             else
             {
                 PlayerHealthSliders[i].gameObject.SetActive(true);
-                UIPosition.UIToWorldPos(MyCanvasRect, MyCamera, BattleManager.PlayerRoleList[i].transform, PlayerHealthSliders[i].GetComponent<RectTransform>(), 0, -240);
+                UIPosition.UIToWorldPos(MyCanvasRect, MyCamera, BattleManager.PRoleList[i].transform, PlayerHealthSliders[i].GetComponent<RectTransform>(), 0, -240);
             }
             PlayerHealthSliders[i].value = 1;
         }
         for (int i = 0; i < EnemyHealthSliders.Length; i++)
         {
-            if (i > BattleManager.EnemyRoleList.Count)
+            if (i > BattleManager.ERoleList.Count)
                 EnemyHealthSliders[i].gameObject.SetActive(false);
             else
             {
                 EnemyHealthSliders[i].gameObject.SetActive(true);
-                UIPosition.UIToWorldPos(MyCanvasRect, MyCamera, BattleManager.EnemyRoleList[i].transform, EnemyHealthSliders[i].GetComponent<RectTransform>(), 0, -240);
+                UIPosition.UIToWorldPos(MyCanvasRect, MyCamera, BattleManager.ERoleList[i].transform, EnemyHealthSliders[i].GetComponent<RectTransform>(), 0, -240);
             }
             EnemyHealthSliders[i].value = 1;
         }
     }
     public void UpdateHealthUI()
     {
-        for (int i = 0; i < BattleManager.PlayerRoleList.Count; i++)
+        for (int i = 0; i < BattleManager.PRoleList.Count; i++)
         {
-            PlayerHealthSliders[i].value = BattleManager.PlayerRoleList[i].HealthRatio;
+            PlayerHealthSliders[i].value = BattleManager.PRoleList[i].HealthRatio;
         }
-        for (int i = 0; i < BattleManager.EnemyRoleList.Count; i++)
+        for (int i = 0; i < BattleManager.ERoleList.Count; i++)
         {
-            EnemyHealthSliders[i].value = BattleManager.EnemyRoleList[i].HealthRatio;
+            EnemyHealthSliders[i].value = BattleManager.ERoleList[i].HealthRatio;
         }
     }
     /// <summary>

@@ -41,6 +41,7 @@ public abstract partial class RoleCom : MonoBehaviour
         if (!IsAlive)
             return;
         Health -= _dmg;
+        BattleUI.ShowHitText("CriticalHit", _dmg, this);
         BattleUI.UpdateHealthUI();
         DeathCheck();
     }
@@ -66,9 +67,8 @@ public abstract partial class RoleCom : MonoBehaviour
         }
         if (ProbabilityGetter.GetResult(Accurate))
         {
-            BattleUI.ShowHitText("CriticalHit", 40, Target);
             Target.PlayMotion("BeHit", 0);
-            Target.ReceiveDmg(40);
+            Target.ReceiveDmg(5);
             return AttackCondition.Success;
         }
         else

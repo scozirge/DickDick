@@ -3,63 +3,91 @@ using System.Collections;
 using System.Collections.Generic;
 public partial class BattleManager : MonoBehaviour
 {
+    static BattleManager MyBM;
     static Transform MyTransform;
     [SerializeField]
     BattleUI MyBattleUI;
     [SerializeField]
     RolePanel MyRoleUIPanel;
-    public static List<PlayerRoleCom> PlayerRoleList = new List<PlayerRoleCom>();
-    public static List<EnemyRoleCom> EnemyRoleList = new List<EnemyRoleCom>();
-    public static PlayerRoleCom CurSelectRole;
-    public static int CurRoleIndex { get; private set; }
-    public static RoleCom TargetRole;
+    public static List<PlayerRoleCom> PRoleList = new List<PlayerRoleCom>();
+    public static PlayerRoleCom PCurSelectRole;
+    public static int CurPRoleIndex { get; private set; }
+    public static RoleCom PTargetRole;
     public static int Round { get; private set; }
+    public static bool PlayerPhase { get; private set; }
 
     void Update()
     {
         TouchDetect();
     }
+
     public void Init(List<PlayerRole> _playerRoleList)
     {
+        MyBM = this;
         MyTransform = transform;
         InitBattleCtrl();
         InitRoleCom(_playerRoleList);
-        CurRoleIndex = 0;
+        CurPRoleIndex = 0;
+        CurERoleIndex = 0;
         Round = 0;
-        SetCurRole(CurRoleIndex);
-        SetTargetRole(EnemyRoleList[0]);
+        PlayerPhase = true;
+        PSetCurRole(CurPRoleIndex);
+        PSetTargetRole(ERoleList[0]);
         MyBattleUI.Init();
+
     }
     public static void BattleStart()
     {
-        BattleUI.UpdateAccurateUI(CurSelectRole.Accurate);
+        BattleUI.UpdateAccurateUI(PCurSelectRole.Accurate);
     }
-    public static void NextTrun()
+    public static void PNextTrun()
     {
-        CurRoleIndex++;
-        if (CurRoleIndex == PlayerRoleList.Count)
+        CurPRoleIndex++;
+        if (CurPRoleIndex == PRoleList.Count)
         {
-            NextRound();
+            NextSide();
             return;
         }
-        else if (CurRoleIndex > 2)
+        else if (CurPRoleIndex > 2)
         {
-            CurRoleIndex = 0;
-            Debug.LogWarning(string.Format("CurRoleIndex超出範圍{0}", CurRoleIndex));
+            CurPRoleIndex = 0;
+            Debug.LogWarning(string.Format("CurPRoleIndex超出範圍{0}", CurPRoleIndex));
             return;
         }
-        SetCurRole(CurRoleIndex);
-        if (TargetRole.IsAlive)
-            SetTargetRole(TargetRole);
+        PSetCurRole(CurPRoleIndex);
+        if (PTargetRole.IsAlive)
+            PSetTargetRole(PTargetRole);
         else
             FindNewTarget();
+    }
+    public static void NextSide()
+    {
+        ClearTargetAndSelect();
+        if (PlayerPhase)
+        {
+            PlayerPhase = false;
+            MyBM.StartCoroutine(EWaitToAction());
+        }
+        else
+        {
+            PlayerPhase = true;
+            NextRound();
+        }
+    }
+    static void ResetPlayer()
+    {
+        for (int i = 0; i < PRoleList.Count; i++)
+        {
+            PRoleList[i].ResetTurn();
+        }
     }
     public static void NextRound()
     {
         Round++;
-        CurRoleIndex = 0;
-        SetCurRole(CurRoleIndex);
-        SetTargetRole(EnemyRoleList[0]);
+        CurPRoleIndex = 0;
+        PSetCurRole(CurPRoleIndex);
+        FindNewTarget();
+        ResetPlayer();
     }
 
     public static void InitRoleCom(List<PlayerRole> _playerRoleList)
@@ -69,56 +97,73 @@ public partial class BattleManager : MonoBehaviour
         SpawnPlayerRole(_playerRoleList);
     }
 
-    public static void SetCurRole(int _index)
+    public static void PSetCurRole(int _index)
     {
-        if (_index >= PlayerRoleList.Count || _index < 0)
+        if (_index >= PRoleList.Count || _index < 0)
         {
             Debug.LogWarning(string.Format("傳入的索引超出範圍:{0}", _index));
             return;
         }
-        CurSelectRole = PlayerRoleList[_index];
-        for (int i = 0; i < PlayerRoleList.Count; i++)
+        PCurSelectRole = PRoleList[_index];
+        for (int i = 0; i < PRoleList.Count; i++)
         {
-            if (PlayerRoleList[i].Index != _index)
-                PlayerRoleList[i].SetUnSelected();
+            if (PRoleList[i].Index != _index)
+                PRoleList[i].SetUnSelected();
             else
             {
-                PlayerRoleList[i].SetBeSelected();
+                PRoleList[i].SetBeSelected();
             }
         }
     }
-    public static void SetTargetRole(RoleCom _targetRole)
+
+    public static void PSetTargetRole(RoleCom _targetRole)
     {
         if (!_targetRole.IsAlive)
             return;
-        TargetRole = _targetRole;
-        CurSelectRole.SetTarget(TargetRole);
-        for (int i = 0; i < EnemyRoleList.Count; i++)
+        PTargetRole = _targetRole;
+        PCurSelectRole.SetTarget(PTargetRole);
+        for (int i = 0; i < ERoleList.Count; i++)
         {
-            if (EnemyRoleList[i].Index != _targetRole.Index)
-                EnemyRoleList[i].SetUnAim();
+            if (ERoleList[i].Index != _targetRole.Index)
+                ERoleList[i].SetUnAim();
             else
             {
-                EnemyRoleList[i].SetBeAim();
+                ERoleList[i].SetBeAim();
             }
+        }
+    }
+    public static void ClearTargetAndSelect()
+    {
+        for (int i = 0; i < ERoleList.Count; i++)
+        {
+            ERoleList[i].SetUnAim();
+            ERoleList[i].SetUnSelected();
+        }
+        for (int i = 0; i < PRoleList.Count; i++)
+        {
+            PRoleList[i].SetUnAim();
+            PRoleList[i].SetUnSelected();
         }
     }
     public static void FindNewTarget()
     {
-        for (int i = 0; i < EnemyRoleList.Count; i++)
+        for (int i = 0; i < ERoleList.Count; i++)
         {
-            if (EnemyRoleList[i].IsAlive)
-                SetTargetRole(EnemyRoleList[i]);
+            if (ERoleList[i].IsAlive)
+            {
+                PSetTargetRole(ERoleList[i]);
+                break;
+            }
         }
     }
     public static void Attack()
     {
-        CurSelectRole.Attack();
+        PCurSelectRole.Attack();
     }
     public static void Defend()
     {
-        CurSelectRole.Defend();
-        NextTrun();
+        if (PCurSelectRole.Defend() == DefendCondition.Success)
+            PNextTrun();
     }
     public static void InitEnemyRole()
     {

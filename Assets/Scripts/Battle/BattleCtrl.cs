@@ -57,7 +57,7 @@ public partial class BattleManager
                 if (Go_CurTouchTargets[i].tag == "EnemyRole")
                 {
                     RoleCom targetRole = Go_CurTouchTargets[i].GetComponent<RoleCom>();
-                    BattleManager.SetTargetRole(targetRole);
+                    BattleManager.PSetTargetRole(targetRole);
                 }
             }
         }

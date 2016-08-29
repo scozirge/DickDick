@@ -50,7 +50,7 @@ public partial class BattleManager : MonoBehaviour
             obj_role.transform.SetParent(Trans_PlayerRoleComParent);
             obj_role.transform.localScale = Vector3.one;
             obj_role.transform.localPosition = new Vector2(PlayerStartPosX + PosXDist * i, PlayerStartPosY);
-            PlayerRoleList.Add(playerRoleCom);
+            PRoleList.Add(playerRoleCom);
         }
     }
     public static void SpawnEnemyRole(List<EnemyRole> _roleList)
@@ -74,7 +74,7 @@ public partial class BattleManager : MonoBehaviour
             obj_role.transform.SetParent(Trans_EnemyRoleComParent);
             obj_role.transform.localScale = Vector3.one;
             obj_role.transform.localPosition = new Vector2(EnemyStartPosX + PosXDist * i, PlayerStartPosY);
-            EnemyRoleList.Add(enemyRoleCom);
+            ERoleList.Add(enemyRoleCom);
         }
     }
 }
