@@ -16,6 +16,10 @@ public partial class BattleManager : MonoBehaviour
     public static int Round { get; private set; }
     public static bool PlayerPhase { get; private set; }
 
+    void Start()
+    {
+        Init(GameManager.RoleList);
+    }
     void Update()
     {
         TouchDetect();
@@ -34,7 +38,7 @@ public partial class BattleManager : MonoBehaviour
         PSetCurRole(CurPRoleIndex);
         PSetTargetRole(ERoleList[0]);
         MyBattleUI.Init();
-
+        BattleManager.BattleStart();
     }
     public static void BattleStart()
     {

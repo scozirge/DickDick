@@ -1,18 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class GameManager : MonoBehaviour
+public partial class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    BattleManager BM;
     public static Dictionary<int, PlayerRole> RoleDic = new Dictionary<int, PlayerRole>();
     public static List<PlayerRole> RoleList = new List<PlayerRole>();
 
     void Start()
     {
         InitRole();
-        BM.Init(RoleList);
-        BattleStart();
+        ChangeScene("Dungeon");
+        DontDestroyOnLoad(this);
     }
     public static void AddRole(int _id, PlayerRole _role)
     {
@@ -47,8 +45,8 @@ public class GameManager : MonoBehaviour
         AddRole(1, role2);
         AddRole(2, role3);
     }
-    public static void BattleStart()
+    public void DungeonStart()
     {
-        BattleManager.BattleStart();
+
     }
 }
