@@ -16,10 +16,11 @@ public class Debugger : MonoBehaviour
     /// <summary>
     /// 初始化
     /// </summary>
-    public void Init()
+    public void Start()
     {
-        //限制FPS在40左右
-        LimitFPS30(true);
+        //限制FPS在30左右
+        LimitFPS30(false);
+        DontDestroyOnLoad(gameObject);
     }
     /// <summary>
     /// 除錯顯示控制

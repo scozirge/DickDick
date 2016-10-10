@@ -1,10 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 public class DungeonMapPanel : MonoBehaviour
 {
     [SerializeField]
+    List<StopCom> StopComList;
+    [SerializeField]
     Animator Ani_Map;
+
+    public int CurStopIndex { get; private set; }
+    
+    public void Init()
+    {
+        for(int i=0;i<StopComList.Count;i++)
+        {
+            StopComList[i].SetData(DungeonManager.StopList[i]);
+        }
+    }
 
     /// <summary>
     /// 播放腳色施法
@@ -29,4 +41,13 @@ public class DungeonMapPanel : MonoBehaviour
     {
         PlayMotion("Forward", 0);
     }
+    public void GetStop(int _index)
+    {
+        CurStopIndex = _index;
+        for (int i = 0; i < StopComList.Count; i++)
+        {
+            StopComList[i].SetData(DungeonManager.StopList[CurStopIndex + i]);
+        }
+    }
+
 }

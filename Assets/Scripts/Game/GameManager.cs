@@ -3,47 +3,50 @@ using System.Collections;
 using System.Collections.Generic;
 public partial class GameManager : MonoBehaviour
 {
-    public static Dictionary<int, PlayerRole> RoleDic = new Dictionary<int, PlayerRole>();
-    public static List<PlayerRole> RoleList = new List<PlayerRole>();
+
+    public static List<EnemyRole> ERoleList = new List<EnemyRole>();
 
     void Start()
     {
-        InitRole();
-        ChangeScene("Dungeon");
+        GameDictionary.InitDic();
+        Player.Init();
+        InitEnemyRole();
+        ChangeScene("Town");
         DontDestroyOnLoad(this);
     }
-    public static void AddRole(int _id, PlayerRole _role)
-    {
-        if (_role == null)
-        {
-            Debug.LogWarning("新增腳色為空");
-            return;
-        }
-        if (RoleDic.ContainsKey(_id))
-        {
-            Debug.LogWarning(string.Format("嘗試加入重複的腳色ID:{0}", _id));
-            return;
-        }
-        RoleDic.Add(_id, _role);
-        RoleList.Add(_role);
-    }
-    public static void InitRole()
+    public static void InitEnemyRole()
     {
         Dictionary<string, string> roleData1 = new Dictionary<string, string>();
+        roleData1.Add("Name", "A");
         roleData1.Add("Health", "100");
+        roleData1.Add("Attack", "50");
+        roleData1.Add("Defense", "40");
         roleData1.Add("Vitality", "100");
-        PlayerRole role1 = new PlayerRole(roleData1);
+        roleData1.Add("Level", "100");
+        roleData1.Add("Weight", "70");
+        EnemyRole enemyRole1 = new EnemyRole(roleData1);
         Dictionary<string, string> roleData2 = new Dictionary<string, string>();
+        roleData2.Add("Name", "B");
         roleData2.Add("Health", "100");
+        roleData2.Add("Attack", "50");
+        roleData2.Add("Defense", "40");
         roleData2.Add("Vitality", "100");
-        PlayerRole role2 = new PlayerRole(roleData1);
+        roleData2.Add("Level", "100");
+        roleData2.Add("Weight", "50");
+        EnemyRole enemyRole2 = new EnemyRole(roleData2);
         Dictionary<string, string> roleData3 = new Dictionary<string, string>();
+        roleData3.Add("Name", "C");
         roleData3.Add("Health", "100");
+        roleData3.Add("Attack", "50");
+        roleData3.Add("Defense", "40");
         roleData3.Add("Vitality", "100");
-        PlayerRole role3 = new PlayerRole(roleData1);
-        AddRole(0, role1);
-        AddRole(1, role2);
-        AddRole(2, role3);
+        roleData3.Add("Level", "100");
+        roleData3.Add("Weight", "30");
+        EnemyRole enemyRole3 = new EnemyRole(roleData3);
+        ERoleList.Clear();
+        ERoleList.Add(enemyRole1);
+        ERoleList.Add(enemyRole2);
+        ERoleList.Add(enemyRole3);
     }
     public void DungeonStart()
     {

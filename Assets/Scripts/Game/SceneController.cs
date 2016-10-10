@@ -14,6 +14,9 @@ public partial class GameManager : MonoBehaviour
             case "Dungeon":
                 SceneManager.LoadScene(_scene);
                 break;
+            case "Town":
+                SceneManager.LoadScene(_scene);
+                break;
             default:
                 Debug.LogWarning(string.Format("錯誤的場景名稱:{0}", _scene));
                 break;

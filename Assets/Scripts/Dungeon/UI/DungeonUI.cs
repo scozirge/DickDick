@@ -13,12 +13,12 @@ public class DungeonUI : MonoBehaviour
         DMapPanel = transform.FindChild("MapPanel").GetComponent<DungeonMapPanel>();
         DCtrlPanel = transform.FindChild("CtrlPanel").GetComponent<DungeonCtrlPanel>();
         Go_DCtrlPanel = DCtrlPanel.gameObject;
-        HideCtrl();
+        DMapPanel.Init();
     }
-    public static void GetStop(StopData _data)
+    public static void GetStop(int _index)
     {
-        DCtrlPanel.GetStop(_data);
-        ShowCtrl();
+        DCtrlPanel.GetStop(DungeonManager.StopList[_index]);
+        DMapPanel.GetStop(_index);
     }
     static void HideCtrl()
     {
@@ -31,6 +31,5 @@ public class DungeonUI : MonoBehaviour
     public static void Forward()
     {
         DMapPanel.Forward();
-        HideCtrl();
     }
 }

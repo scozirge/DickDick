@@ -18,19 +18,19 @@ public partial class BattleManager : MonoBehaviour
 
     void Start()
     {
-        Init(GameManager.RoleList);
+        Init();
     }
     void Update()
     {
         TouchDetect();
     }
 
-    public void Init(List<PlayerRole> _playerRoleList)
+    public void Init()
     {
         MyBM = this;
         MyTransform = transform;
         InitBattleCtrl();
-        InitRoleCom(_playerRoleList);
+        InitRoleCom();
         CurPRoleIndex = 0;
         CurERoleIndex = 0;
         Round = 0;
@@ -94,11 +94,11 @@ public partial class BattleManager : MonoBehaviour
         ResetPlayer();
     }
 
-    public static void InitRoleCom(List<PlayerRole> _playerRoleList)
+    public static void InitRoleCom()
     {
         InitSpawner();
-        InitEnemyRole();
-        SpawnPlayerRole(_playerRoleList);
+        SpawnPlayerRole(Player.RoleList);
+        SpawnEnemyRole(GameManager.ERoleList);
     }
 
     public static void PSetCurRole(int _index)
@@ -168,22 +168,5 @@ public partial class BattleManager : MonoBehaviour
     {
         if (PCurSelectRole.Defend() == DefendCondition.Success)
             PNextTrun();
-    }
-    public static void InitEnemyRole()
-    {
-        Dictionary<string, string> roleData1 = new Dictionary<string, string>();
-        roleData1.Add("Health", "100");
-        EnemyRole enemyRole1 = new EnemyRole(roleData1);
-        Dictionary<string, string> roleData2 = new Dictionary<string, string>();
-        roleData2.Add("Health", "100");
-        EnemyRole enemyRole2 = new EnemyRole(roleData2);
-        Dictionary<string, string> roleData3 = new Dictionary<string, string>();
-        roleData3.Add("Health", "100");
-        EnemyRole enemyRole3 = new EnemyRole(roleData3);
-        List<EnemyRole> enemyRoleList = new List<EnemyRole>();
-        enemyRoleList.Add(enemyRole1);
-        enemyRoleList.Add(enemyRole2);
-        enemyRoleList.Add(enemyRole3);
-        SpawnEnemyRole(enemyRoleList);
     }
 }
